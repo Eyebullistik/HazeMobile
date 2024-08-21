@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="https://github.com/Eyebullistik/Haze-Source/blob/main/Images/OrangeHaze.png?raw=true">
+    <meta charset="UTF-8">
+    
+    <title>Haze</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(135deg, #F57635, #F57635);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            icon-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #F56F35;
+            padding: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        nav a:hover {
+            background-color: #F46737;
+            border-radius: 5px;
+            transform: translateY(-2px);
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .app-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            width: calc(30% - 40px);
+            display: inline-block;
+            vertical-align: top;
+            cursor: pointer;
+            position: relative;
+        }
+        .app-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            background-color: #f0f0f0;
+        }
+        .app-card img {
+            max-width: 100%;
+            border-radius: 15px;
+            object-fit: contain;
+        }
+        .app-card h3 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .app-card p {
+            color: #555;
+        }
+        .download-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #F56F35;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .download-button:hover {
+            background-color: #F46737;
+            transform: translateY(-2px);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            transition: opacity 0.3s;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 15px;
+            transition: transform 0.3s;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-body img {
+            max-width: 100%;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            object-fit: contain;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .modal-body img.onerror {
+            src: 'default-image.png';
+        }
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+        }
+        @media (max-width: 800px) {
+            .app-card {
+                width: calc(45% - 40px);
+            }
+        }
+        @media (max-width: 500px) {
+            .app-card {
+                width: calc(100% - 40px);
+            }
+        }
+        .search-bar {
+            margin: 20px;
+            text-align: center;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .search-bar input {
+            width: 50%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            transition: box-shadow 0.3s;
+            outline: none;
+        }
+        .search-bar input:focus {
+            box-shadow: 0 0 10px rgba(0, 120, 215, 0.5);
+        }
+        . {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            cursor: pointer;
+        }
+        .settings-menu {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #fefefe;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+        .settings-menu h2 {
+            margin-bottom: 10px;
+        }
+        .settings-menu label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .settings-menu select {
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .settings-menu input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #aaa #f5f5f5;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #aaa;
+            border-radius: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #999;
+        }
+        .dark-mode {
+            background-color: #333;
+            color: white;
+        }
+        .dark-mode .search-bar input {
+            background-color: #555;
+            color: white;
+        }
+        .dark-mode .app-card {
+            background-color: #444;
+            color: white;
+            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.1);
+        }
+        .dark-mode .app-card:hover {
+            background-color: #555;
+            color: white;
+            box-shadow: 0 12px 24px rgba(255, 255, 255, 0.2);
+        }
+        .dark-mode .app-card p {
+            color: white;
+        }
+        .dark-mode .download-button {
+            background-color: #F56F35;
+        }
+        .dark-mode .modal-content {
+            background-color: #F46737;
+            border-color: #888;
+        }
+        .dark-mode .modal-body img {
+            border-radius: 15px;
+            border-color: #888;
+        }
+        .dark-mode .search-bar input {
+            border-color: #888;
+        }
+        .dark-mode .settings-menu {
+            background-color: #444;
+            color: white;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+        .dark-mode .settings-menu label,
+        .dark-mode .settings-menu h2 {
+            color: white;
+        }
+        .settings-menu .close-settings {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #aaa;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .settings-menu .close-settings:hover {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header">
+        <img src="https://github.com/Eyebullistik/Haze-Source/blob/main/Images/OrangeHaze.png?raw=true" alt="logo" style="width:100px;height:100px;" />
+  <h1>Haze</h1>
+    </div>
+</header>
+
+<nav id="navigation">
+
+</nav>
+
+<div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search for apps...">
+</div>
+
+<div class="container custom-scrollbar" id="app-container">
+    <!-- Your app cards here -->
+</div>
+
+<!-- The Modal -->
+<div id="appModal" class="modal">
+    <div class="modal-content custom-scrollbar">
+        <span class="close">&times;</span>
+        <div class="modal-header">
+            <h3 id="modal-app-name"></h3>
+            <a id="modal-download-link" class="download-button">Download</a>
+        </div>
+        <img id="modal-app-icon" src="" alt="App Icon" style="float:left; margin-right: 20px; border-radius: 15px;">
+        <p id="modal-app-description"></p>
+        <div id="modal-screenshots"></div>
+    </div>
+</div>
+
+<div class="settings-icon" onclick="toggleSettings()">
+    <img src="https://github.com/Eyebullistik/-Source/blob/main/Images/OrangeHaze.png?raw=true" width="100" height="100" alt="Settings">
+</div>
+
+<div id="settingsMenu" class="settings-menu custom-scrollbar">
+    <span class="close-settings" onclick="toggleSettings()">&#10006;</span>
+    <h2>Settings</h2>
+    <label for="theme">Theme:</label>
+    <select id="theme" onchange="changeTheme()">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+    <label for="hideAdmin">Hide Admin Apps:</label>
+    <input type="checkbox" id="hideAdmin" onchange="toggleAdminApps()">
+</div>
+
+<footer>
+    <p>&copy; 2024 Haze. All rights reserved.</p>
+</footer>
+
+<script>
+    let appsData = [];
+    let darkMode = false;
+
+    // Fetch JSON data from the GitHub repository
+    fetch('https://raw.githubusercontent.com/Eyebullistik/Haze-Source/main/HazeSource.json')
+        .then(response => response.json())
+        .then(data => {
+            appsData = data;
+            renderApps('All');
+        })
+        .catch(error => {
+            console.error('Error fetching app data:', error);
+        });
+
+    // Modal functions
+    function openModal(app) {
+        const modal = document.getElementById('appModal');
+        document.getElementById('modal-app-name').textContent = app.name;
+        document.getElementById('modal-download-link').href = app.download_link;
+        document.getElementById('modal-app-icon').src = app.app_icon;
+        document.getElementById('modal-app-description').textContent = app.description;
+
+        const screenshotsContainer = document.getElementById('modal-screenshots');
+        screenshotsContainer.innerHTML = '';
+        app.screenshots.forEach(screenshot => {
+            const img = document.createElement('img');
+            img.src = screenshot;
+            img.onerror = () => { img.src = 'default-image.png'; }
+            screenshotsContainer.appendChild(img);
+        });
+
+        modal.style.display = 'block';
+    }
+
+    // Close the modal
+    const modal = document.getElementById('appModal');
+    const span = document.getElementsByClassName('close')[0];
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Render apps based on category
+    function renderApps(category) {
+        const appContainer = document.getElementById('app-container');
+        appContainer.innerHTML = '';
+        appsData.forEach(app => {
+            if (category === 'All' || app.tabs.includes(category)) {
+                if (!(document.getElementById('hideAdmin').checked && app.admin)) {
+                    const appCard = document.createElement('div');
+                    appCard.className = 'app-card';
+                    appCard.innerHTML = `
+                    <h3>${app.name}</h3>
+                        <img src="${app.app_icon}" alt="${app.name} icon">
+                        <p>${app.description}</p>
+                        <a href="${app.download_link}" class="download-button">Download</a>
+                    `;
+                    appCard.addEventListener('click', () => {
+                        openModal(app);
+                    });
+                    appContainer.appendChild(appCard);
+                }
+            }
+        });
+    }
+
+    // Search function
+    document.getElementById('search-input').addEventListener('input', (event) => {
+        const query = event.target.value.toLowerCase();
+        const appContainer = document.getElementById('app-container');
+        appContainer.innerHTML = '';
+        appsData.forEach(app => {
+            if (app.name.toLowerCase().includes(query) || app.description.toLowerCase().includes(query)) {
+                if (!(document.getElementById('hideAdmin').checked && app.admin)) {
+                    const appCard = document.createElement('div');
+                    appCard.className = 'app-card';
+                    appCard.innerHTML = `
+                        <h3>${app.name}${app.admin ? '<img src="shield-icon.png" alt="Admin" style="width: 20px; margin-left: 5px; border-radius: 15px;">' : ''}</h3>
+                        <img src="${app.app_icon}" alt="${app.name} icon">
+                        <p>${app.description}</p>
+                        <a href="${app.download_link}" class="download-button">Download</a>
+                    `;
+                    appCard.addEventListener('click', () => {
+                        openModal(app);
+                    });
+                    appContainer.appendChild(appCard);
+                }
+            }
+        });
+    });
+
+    // Navigation
+    const tabs = ['All', 'Trending', 'Games', 'Utility', 'Emulation', 'Roms', 'Other'];
+    const navigation = document.getElementById('navigation');
+    tabs.forEach(tab => {
+        const link = document.createElement('a');
+        link.href = `#${tab}`;
+        link.textContent = tab;
+        link.addEventListener('click', () => {
+            renderApps(tab);
+        });
+        navigation.appendChild(link);
+    });
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Handle initial tab selection based on URL hash
+    const initialTab = window.location.hash ? window.location.hash.substring(1) : 'All';
+    renderApps(initialTab);
+
+    // Toggle Settings menu
+    function toggleSettings() {
+        const settingsMenu = document.getElementById('settingsMenu');
+        settingsMenu.style.display = settingsMenu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Change theme
+    function changeTheme() {
+        const theme = document.getElementById('theme').value;
+        if (theme === 'dark') {
+            document.body.classList.add('dark-mode');
+            darkMode = true;
+        } else {
+            document.body.classList.remove('dark-mode');
+            darkMode = false;
+        }
+    }
+
+    // Toggle Admin Apps visibility
+    function toggleAdminApps() {
+        const hideAdmin = document.getElementById('hideAdmin').checked;
+        renderApps('All');
+    }
+</script>
+
+</body>
+</html>
