@@ -47,22 +47,23 @@
             overflow-y: auto;
         }
         .app-card {
-            background-color: white;
+            background: rgba(0, 0, 0, 0.7);
             border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            margin: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            margin: 10px;
             padding: 20px;
             transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
-            width: calc(30% - 40px);
-            display: inline-block;
-            vertical-align: top;
+            width: calc(100% / 1.5 - 40px);
+            max-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer;
-            position: relative;
         }
         .app-card:hover {
             transform: translateY(-15px) scale(1.05);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-            background-color: #f0f0f0;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+            background-color: rgba(255, 255, 255, 0.1);
         }
         .app-card img {
             max-width: 100%;
@@ -74,9 +75,12 @@
             align-items: center;
             justify-content: space-between;
             margin: 10px 0;
+            color: white;
+            text-align: center;
         }
         .app-card p {
-            color: #555;
+            color: #ddd;
+            text-align: center;
         }
         .download-button {
             position: absolute;
