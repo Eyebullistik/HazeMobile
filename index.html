@@ -354,7 +354,7 @@
     let darkMode = false;
 
     // Fetch JSON data from the GitHub repository
-    fetch('https://github.com/Eyebullistik/Haze-Source/blob/main/IOS-Apps.json')
+    fetch('https://raw.githubusercontent.com/Eyebullistik/Haze-Source/main/IOS-Apps.json')
         .then(response => response.json())
         .then(data => {
             appsData = data;
