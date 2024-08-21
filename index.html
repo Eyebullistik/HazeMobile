@@ -350,8 +350,7 @@
                     appCard.className = 'app-card';
                     appCard.innerHTML = `
                         <img src="${app.iconLink}" alt="${app.appName}">
-                        <h3>${app.appName}</h3>
-                        <h3>${app.version}</h3>
+                        <h3>${app.appName} <span>${app.version}</span></h3>
                         <h3>${app.developer}</h3>
                         <p>${app.description}</p>
                         <a href="${app.downloadLink}" class="download-button">Download</a>
